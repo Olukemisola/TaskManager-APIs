@@ -1,0 +1,11 @@
+{
+    "name": "adedi/task-manager",
+    "description": "Task Management Backend",
+    "type": "project",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Main\\": "src/"
+        }
+    }
+}
