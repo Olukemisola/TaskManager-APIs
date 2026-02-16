@@ -1,25 +1,29 @@
 <?php
 
+namespace Main\Model;
+
 use Main\Utils\DB;
 
-class taskModel{
+abstract class taskModel{
 
-public $id;
+protected $id;
 
-public $title;
+protected $title;
 
-public $description;
+protected $description;
 
-public $completed;
+protected $completed;
 
-public $assignedUser;
+protected $assignedUser;
 
-  private $conn;
+  protected $conn;
 
     public function __construct()
     {
         $this->conn = DB::getInstance()->getConnection();
     }
+        abstract public function getType(): string;
+
 
 public function getId()
 {
