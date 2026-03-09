@@ -6,6 +6,7 @@ use Main\Factory\TaskFactory;
 use Main\Model\GenericTask;
 use Main\Notifier\EmailNotifier;
 use Main\Notifier\LogNotifier;
+use Main\Repository\TaskRepository;
 use Main\Strategy\LowPriorityStrategy;
 use PDO;
 use PDOException;
@@ -86,6 +87,29 @@ try{
                 ->withStatus(400);
         }
     }
+    public function createTask(Request $request, Response $response)
+{
+    $data = $request->getParsedBody();
+
+    $taskRepository = new TaskRepository();
+
+    $taskRepository->createTask(
+        $data['title'],
+        $data['description'],
+        0,
+        $data['assignedUser']
+    );
+
+    $response->getBody()->write(json_encode([
+        'message' => 'Task created successfully'
+    ]));
+
+    return $response;
+}
+
+
+
+
 }
 
 
