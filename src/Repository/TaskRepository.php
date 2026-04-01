@@ -2,16 +2,17 @@
 
 namespace Main\Repository;
 
+use Main\Interface\Repository\ITaskRepository;
 use Main\Utils\DB;
 use PDO;
 
-class TaskRepository
+class TaskRepository implements ITaskRepository
 {
     private $conn;
 
     public function __construct()
     {
-       $this->conn = DB::getInstance()->getConnection();
+        $this->conn = DB::getInstance()->getConnection();
         // $this->conn = DB::getInstance();
     }
 
@@ -52,22 +53,22 @@ class TaskRepository
         ]);
     }
     public function updateTask($id, $title, $description, $assignedUser, $completed)
-{
-    $sql = "UPDATE tasks 
+    {
+        $sql = "UPDATE tasks 
             SET title = :title, description = :description, assigned_user = :assigned_user, completed = :completed
             WHERE id = :id";
 
-    $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
 
-    $update= $stmt->execute([
-        ':title' => $title,
-        ':description' => $description,
-        ':assigned_user' => $assignedUser,
-        ':completed' => $completed,
-        ':id' => $id
-    ]);
-    return $update;
-}
+        $update = $stmt->execute([
+            ':title' => $title,
+            ':description' => $description,
+            ':assigned_user' => $assignedUser,
+            ':completed' => $completed,
+            ':id' => $id
+        ]);
+        return $update;
+    }
 
     public function getAll()
     {
@@ -79,9 +80,9 @@ class TaskRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function deleteTask($id)
-{
-    $sql = "DELETE FROM tasks WHERE id = :id";
-    $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([':id' => $id]);
-}
+    {
+        $sql = "DELETE FROM tasks WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':id' => $id]);
+    }
 }

@@ -10,17 +10,23 @@ use Main\Repository\UserRepository;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
-class taskController{
+class userController{
+private $userRepo;
+
+    public function __construct(UserRepository $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
 
     public function createUser(Request $request, Response $response)
     {
         try {
             $data = $request->getParsedBody();
 
-            $name = $data['name'] ?? '';
-            $email = $data['email'] ?? '';
+            $name = $data['name'] ?? null;
+            $email = $data['email'] ??null;
 
-         $user= new UserRepository();
+            $this->userRepo->createUser($name, $email);
             $result = [
                 'message' => 'User created successfully',
                 'name' => $name,
@@ -45,70 +51,74 @@ class taskController{
 
     public function getById(Request $request, Response $response, $args)
     {
-     $id= $request->getAttribute('id');
+        try{
+         $id= $request->getAttribute('id');
+          $user = $this->userRepo->getById($id);
 
-        if (!$id) {
-            $response->getBody()->write(json_encode(['message' => 'ID is required']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            $response->getBody()->write(json_encode($user));
+            return $response
+            ->withHeader('Content-Type', 'application/json')->withStatus(200);
+
+        } catch (\Throwable $err) {
+            $response->getBody()
+            ->write(json_encode(['message' => $err->getMessage()]));
+            return $response
+            ->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
-
-         $user= new UserRepository();
-
-        if (!$user) {
-            $response->getBody()->write(json_encode(['message' => 'User not found']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-        }
-
-        $response->getBody()->write(json_encode($user));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
+
+  
 
     public function getAll(Request $request, Response $response)
     {
-         $users= new UserRepository();
+        try {
+            $users = $this->userRepo->getAll();
+            $response->getBody()->write(json_encode($users));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 
-        $response->getBody()->write(json_encode($users));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        } catch (\Throwable $err) {
+            $response->getBody()
+            ->write(json_encode(['message' => $err
+            ->getMessage()]));
+            return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(400);
+        }
     }
 
     public function update(Request $request, Response $response, $args)
     {
-     $id=$request->getAttribute('id');
-        $data = $request->getParsedBody();
+        try{
+        $id=$request->getAttribute('id');
 
-        if (!$id) {
-            $response->getBody()->write(json_encode(['message' => 'ID is required']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+          $data = $request->getParsedBody();
+            $name = $data['name'] ??null;
+            $email = $data['email'] ??null;
+
+            $this->userRepo->updateUser($id, $name, $email);
+
+            $response->getBody()->write(json_encode([
+                'message' => 'User updated successfully',
+                'id' => $id,
+                'name' => $name,
+                'email' => $email
+            ]));
+            return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+
+        } catch (\Throwable $err) {
+            $response->getBody()
+            ->write(json_encode(['message' => $err->getMessage()]));
+            return $response
+            ->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
-
-        $name = $data['name'] ?? '';
-        $email = $data['email'] ?? '';
-
-         $user= new UserRepository();
-
-        $response->getBody()->write(json_encode([
-            'message' => 'User updated successfully',
-            'id' => $id,
-            'name' => $name,
-            'email' => $email
-        ]));
-   return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 
-    public function delete(Request $request, Response $response, $args)
-    {
-     $id=$request->getAttribute('id');
-        if (!$id) {
-            $response->getBody()->write(json_encode(['message' => 'ID is required']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-        }
 
-         $user= new UserRepository();
 
-        $response->getBody()->write(json_encode(['message' => 'User deleted successfully']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
-}
+
 
 
 
