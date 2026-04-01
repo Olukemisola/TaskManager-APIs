@@ -57,10 +57,6 @@ class TaskUseCase implements ITaskUseCase
     {
         $success = $this->taskRepo->updateStatus($id, $completed);
 
-        // trigger notification if needed
-        if ($success) {
-            $this->notifier->send("", "", "Task updated");
-        }
 
         return [
             'success' => $success,
