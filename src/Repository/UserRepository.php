@@ -2,10 +2,12 @@
 
 namespace Main\Repository;
 
+use Main\Interface\Repository\IUserRepository;
+
 use Main\Utils\DB;
 use PDO;
 
-class UserRepository
+class UserRepository implements IUserRepository
 {
     private $conn;
 
@@ -42,7 +44,7 @@ class UserRepository
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
 
-        $getUsers= $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $getUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $getUsers;
     }
 
@@ -64,7 +66,8 @@ class UserRepository
 
         return $stmt->execute(
             [
-            ':id' => $id
-        ]);
+                ':id' => $id
+            ]
+        );
     }
 }

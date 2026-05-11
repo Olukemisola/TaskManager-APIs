@@ -3,6 +3,8 @@
 namespace Main\UseCase;
 
 use Main\Factory\TaskFactory;
+
+use Main\Interface\Services\ITaskService;
 use Main\Interface\Repository\ITaskRepository;
 use Main\Interface\Services\INotifierGeneric;
 use Main\Interface\UseCase\ITaskUseCase;
@@ -14,8 +16,8 @@ class TaskUseCase implements ITaskUseCase
     private readonly UserRepository $userRepo;
 
     public function __construct(
-        private readonly ITaskRepository $taskRepo,
-        UserRepository $userRepo,
+        private readonly ITaskService $taskService,
+        private UserRepository $userRepo,
         private readonly INotifierGeneric $notifier
     ) {
         // $this->taskRepo = $taskRepo;
@@ -65,3 +67,55 @@ class TaskUseCase implements ITaskUseCase
         ];
     }
 }
+
+//this is the new one of decorator i commented , i am to work on the commnted one and the one i commented in my DI and Task service and ItaseService
+// <?php
+
+// namespace Main\UseCase;
+
+// use Main\Factory\TaskFactory;
+// use Main\Interface\Services\ITaskService;
+// use Main\Interface\Services\INotifierGeneric;
+// use Main\Interface\UseCase\ITaskUseCase;
+// use Main\Repository\UserRepository;
+
+// class TaskUseCase implements ITaskUseCase
+// {
+//     public function __construct(
+//         private ITaskService $taskService,
+//         private UserRepository $userRepo,
+//         private INotifierGeneric $notifier
+//     ) {}
+
+//     public function create($userData)
+//     {
+//         $task = TaskFactory::create(
+//             $userData['type'] ?? 'bug',
+//             $userData['title'] ?? 'Untitled Task',
+//             $userData['priority'] ?? 'low'
+//         );
+
+//         $this->notifier->send("", "", "");
+
+//         return [
+//             'task_type' => $task->getType(),
+//             'title' => $task->getTitle()
+//         ];
+//     }
+
+//     public function getAll()
+//     {
+//         return $this->taskService->getAllTasks();
+//     }
+
+//     public function updateStatus($id, $completed)
+//     {
+//         $success = $this->taskService->updateStatus($id, $completed);
+
+//         return [
+//             'success' => $success,
+//             'id' => $id,
+//             'completed' => $completed
+//         ];
+//     }
+// }
