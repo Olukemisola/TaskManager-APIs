@@ -12,16 +12,16 @@ use Main\Repository\UserRepository;
 
 class TaskUseCase implements ITaskUseCase
 {
-    // private readonly ITaskRepository $taskRepo;
+    private readonly ITaskRepository $taskRepo;
     private readonly UserRepository $userRepo;
 
     public function __construct(
         private readonly ITaskService $taskService,
-        private UserRepository $userRepo,
+        private UserRepository $user_repository,
         private readonly INotifierGeneric $notifier
     ) {
         // $this->taskRepo = $taskRepo;
-        $this->userRepo = $userRepo;
+        $this->userRepo = $user_repository;
     }
 
     public function create($userData)

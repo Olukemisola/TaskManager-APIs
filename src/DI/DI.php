@@ -17,9 +17,7 @@ use Main\UseCase\TaskUseCase;
 $taskRepository = new MongoDBTaskRepository();
 $userRepository = new UserRepository();
 
-// -----------------------------
 // Notifier setup
-// -----------------------------
 $emailNotifier = new EmailNotifier();
 $smsNotifier = new SmsNotifier();
 $notifier = new Notifier($emailNotifier, $smsNotifier);
